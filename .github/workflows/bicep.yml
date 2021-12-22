@@ -22,3 +22,7 @@ jobs:
     # Validate Bicep
       - name: Validate
         run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2
+
+    # what-if
+      - name: what-if
+        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"}  -w
