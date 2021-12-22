@@ -1,0 +1,13 @@
+name: validate-bicep
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  validate-bicep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
