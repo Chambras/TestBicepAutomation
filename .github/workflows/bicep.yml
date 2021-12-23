@@ -9,6 +9,9 @@ on:
 jobs:
   validate-bicep:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
 
     # Checkout code
