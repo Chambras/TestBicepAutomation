@@ -9,11 +9,12 @@ on:
 jobs:
   validate-bicep:
     runs-on: ubuntu-latest
+    
     defaults:
       run:
         shell: bash
-    steps:
 
+    steps:
     # Checkout code
       - name: Checkout
         uses: actions/checkout@v2
@@ -30,7 +31,7 @@ jobs:
         run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
 
     # what-if
-      - name: what-if
+      - name: What-if
         id: whatif
         run: |
           PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json -w)
@@ -40,7 +41,7 @@ jobs:
           echo "::set-output name=plan::$PLAN"
 
     # saving what-if
-      - name: save-what-if
+      - name: Save-what-if
         id: save-what-if
         uses: actions/github-script@v5
         if: github.event_name == 'pull_request'
@@ -70,7 +71,7 @@ jobs:
             })
 
     # deploy
-      - name: deploy
+      - name: Deploy
         id: deploy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
