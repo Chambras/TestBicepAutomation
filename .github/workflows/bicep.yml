@@ -33,8 +33,8 @@ jobs:
       - name: what-if
         id: whatif
         run: |
-        PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}  -w)
-        echo "::set-output name=plan:: $PLAN"
+          PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}  -w)
+          echo "::set-output name=plan::$PLAN"
 
     # saving what-if
       - name: save-what-if
