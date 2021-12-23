@@ -18,6 +18,8 @@ jobs:
     # Checkout code
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
 
     # Log into Azure
       - name: Log into Azure
@@ -75,3 +77,17 @@ jobs:
         id: deploy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
+
+    # build json template
+      - name: Bicep build
+        id: bicep-build
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: az bicep build -f main.bicep -outfile ./main.json
+
+    # commit json template
+      - name: commit bicep build
+        id: commit-bicep-build
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: new json template
+          
