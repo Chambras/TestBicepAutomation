@@ -32,7 +32,9 @@ jobs:
     # what-if
       - name: what-if
         id: whatif
-        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}  -w
+        run: |
+        PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}  -w)
+        echo "::set-output name=outdated:: $PLAN"
 
     # saving what-if
       - name: save-what-if
@@ -40,7 +42,7 @@ jobs:
         uses: actions/github-script@v5
         if: github.event_name == 'pull_request'
         env:
-          PLAN_INFRA: "terraform\n${{ steps.whatif.outcome }}\nworks"
+          PLAN_INFRA: "terraform\n${{ steps.whatif.outputs.plan }}\nworks"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
