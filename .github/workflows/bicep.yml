@@ -34,6 +34,9 @@ jobs:
         id: whatif
         run: |
           PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}  -w)
+          PLAN="${PLAN//'%'/'%25'}"
+          PLAN="${PLAN//$'\n'/'%0A'}"
+          PLAN="${PLAN//$'\r'/'%0D'}"
           echo "::set-output name=plan::$PLAN"
 
     # saving what-if
