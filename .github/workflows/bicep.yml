@@ -92,3 +92,11 @@ jobs:
         with:
           commit_message: new json template
           add_options: '-A'
+    
+    # upload json build artifact
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          name: mlz-bicep-build
+          path: ./main.json 
