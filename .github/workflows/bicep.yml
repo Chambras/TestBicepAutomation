@@ -28,7 +28,7 @@ jobs:
 
     # what-if
       - name: what-if
-        id: what-if
+        id: whatif
         run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}  -w
 
     # saving what-if
@@ -37,7 +37,7 @@ jobs:
         uses: actions/github-script@v5
         if: github.event_name == 'pull_request'
         env:
-          PLAN_INFRA: "bicep\n${{ steps.what-if.outputs.stdout }}"
+          PLAN_INFRA: "bicep\n${{ steps.whatif.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
