@@ -42,7 +42,7 @@ jobs:
         uses: actions/github-script@v5
         if: github.event_name == 'pull_request'
         env:
-          PLAN_INFRA: "terraform\n${{ steps.whatif.outputs.plan }}\nworks"
+          PLAN_INFRA: "${{ steps.whatif.outputs.plan }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
