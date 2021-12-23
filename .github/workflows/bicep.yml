@@ -15,7 +15,8 @@ jobs:
         shell: bash
 
     environment:
-      name: Commercial
+      # name: Commercial
+      name: Gov
 
     steps:
     # Checkout code
@@ -109,7 +110,8 @@ jobs:
         shell: bash
 
     environment:
-      name: Commercial
+      # name: Commercial
+      name: Gov
 
     steps:
      # Checkout code
