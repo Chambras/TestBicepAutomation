@@ -1,4 +1,4 @@
-name: validate-bicep
+name: Bicep_deployment
 
 on:
   push:
