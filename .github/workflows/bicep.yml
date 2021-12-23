@@ -82,7 +82,7 @@ jobs:
       - name: Bicep build
         id: bicep-build
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az bicep build -f main.bicep -outfile ./main.json
+        run: az bicep build -f main.bicep --outfile ./main.json
 
     # commit json template
       - name: Commit bicep build
