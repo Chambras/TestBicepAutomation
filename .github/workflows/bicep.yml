@@ -94,7 +94,7 @@ jobs:
           add_options: '-A'
     
     # upload json build artifact
-      – name: Upload a Build Artifact
+      - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
