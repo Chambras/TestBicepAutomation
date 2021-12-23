@@ -85,9 +85,10 @@ jobs:
         run: az bicep build -f main.bicep -outfile ./main.json
 
     # commit json template
-      - name: commit bicep build
+      - name: Commit bicep build
         id: commit-bicep-build
         uses: stefanzweifel/git-auto-commit-action@v4
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
           commit_message: new json template
-          
+          add_options: '-A'
