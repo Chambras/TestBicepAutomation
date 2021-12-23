@@ -25,8 +25,8 @@ jobs:
 
     # what-if
       - name: what-if
-        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"}  -w
+        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\",\"owner\":\"marcelo\"}  -w
 
     # deploy
       - name: deploy
-        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"}
+        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\",\"owner\":\"marcelo\"}
