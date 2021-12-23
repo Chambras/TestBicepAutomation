@@ -29,7 +29,8 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          environment: 'AzureCloud'
+          # environment: 'AzureCloud'
+          environment: AzureUSGovernment
 
     # Validate Bicep
       - name: Validate
@@ -124,7 +125,8 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          environment: 'AzureCloud'
+          # environment: 'AzureCloud'
+          environment: AzureUSGovernment
 
     # deploy
       - name: Deploy
