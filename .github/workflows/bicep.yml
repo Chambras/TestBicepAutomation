@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  validate-bicep:
+  buildtest:
     runs-on: ubuntu-latest
     
     defaults:
@@ -72,12 +72,6 @@ jobs:
               body: output
             })
 
-    # deploy
-      - name: Deploy
-        id: deploy
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
-
     # build json template
       - name: Bicep build
         id: bicep-build
@@ -100,3 +94,32 @@ jobs:
         with:
           name: mlz-bicep-build
           path: ./main.json 
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [buildtest]
+    
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+     # Checkout code
+      - name: Checkout
+        uses: actions/checkout@v2
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          ref: ${{ github.head_ref }}
+
+    # Log into Azure
+      - name: Log into Azure
+        uses: azure/login@v1
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # deploy
+      - name: Deploy
+        id: deploy
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
