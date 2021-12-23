@@ -46,7 +46,9 @@ jobs:
             
             <details><summary>Show Plan</summary>
             
-            \`\`\`${process.env.PLAN_INFRA}\`\`\`
+            \`\`\`\n
+            ${process.env.PLAN_INFRA}
+            \`\`\`
             
             </details>
             
