@@ -27,13 +27,13 @@ jobs:
     # Validate Bicep
       - name: Validate
         id: validate
-        run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2
+        run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
 
     # what-if
       - name: what-if
         id: whatif
         run: |
-          PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}  -w)
+          PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json -w)
           PLAN="${PLAN//'%'/'%25'}"
           PLAN="${PLAN//$'\n'/'%0A'}"
           PLAN="${PLAN//$'\r'/'%0D'}"
@@ -73,4 +73,4 @@ jobs:
       - name: deploy
         id: deploy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p name=mzv location=eastus2 tags={\"env\":\"dev\"\,\"owner\":\"marcelo\"}
+        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
