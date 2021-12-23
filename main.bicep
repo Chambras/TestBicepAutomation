@@ -1,6 +1,8 @@
 targetScope = 'subscription'
 
+@description('Resource Group name.')
 param name string
+
 param location string
 param tags object = {}
 
