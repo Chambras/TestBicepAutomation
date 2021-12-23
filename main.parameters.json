@@ -11,7 +11,8 @@
       "tags": {
         "value": {
           "env": "dev",
-          "owner": "marcelo"
+          "owner": "marcelo",
+          "project": "mlz"
         }
       }
     }
