@@ -80,7 +80,7 @@ jobs:
       - name: Bicep build
         id: bicep-build
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az bicep build -f main.bicep --outfile ./main.json
+        run: az bicep build -f main.bicep --outfile ./mainCom.json
 
     # commit json template
       - name: Commit bicep build
@@ -96,8 +96,8 @@ jobs:
         uses: actions/upload-artifact@v2
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
-          name: mlz-bicep-build
-          path: ./main.json 
+          name: mlz-bicep-build-com
+          path: ./mainCom.json 
 
   deploy:
     runs-on: ubuntu-latest
