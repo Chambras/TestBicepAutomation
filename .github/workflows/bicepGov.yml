@@ -59,7 +59,7 @@ jobs:
             const output = `#### Bicep Validation:  🖌\`${{ steps.validate.outcome }}\`
             #### Bicep Infrastructure Plan:  📖\`${{ steps.whatif.outcome }}\`
             
-            <details><summary>Show Plan ${ process.environment }</summary>
+            <details><summary>Show Plan ${{ process.environment }}</summary>
             
             \`\`\`\n
             ${process.env.PLAN_INFRA}
