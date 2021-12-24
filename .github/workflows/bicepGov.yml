@@ -1,4 +1,4 @@
-name: Bicep_deployment
+name: Bicep_deployment_gov
 
 on:
   push:
@@ -15,7 +15,6 @@ jobs:
         shell: bash
 
     environment:
-      # name: Commercial
       name: Gov
 
     steps:
@@ -30,19 +29,18 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          # environment: 'AzureCloud'
           environment: AzureUSGovernment
 
     # Validate Bicep
       - name: Validate
         id: validate
-        run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
+        run: az deployment sub validate -n TestBicep -l usgovvirginia -f main.bicep -p @main.parameters.json
 
     # what-if
       - name: What-if
         id: whatif
         run: |
-          PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json -w)
+          PLAN=$(az deployment sub create -n TestBicep -l usgovvirginia -f main.bicep -p @main.parameters.json -w)
           PLAN="${PLAN//'%'/'%25'}"
           PLAN="${PLAN//$'\n'/'%0A'}"
           PLAN="${PLAN//$'\r'/'%0D'}"
@@ -110,7 +108,6 @@ jobs:
         shell: bash
 
     environment:
-      # name: Commercial
       name: Gov
 
     steps:
@@ -127,11 +124,10 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          # environment: 'AzureCloud'
           environment: AzureUSGovernment
 
     # deploy
       - name: Deploy
         id: deploy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
+        run: az deployment sub create -n TestBicep -l usgovvirginia -f main.bicep -p @main.parameters.json

@@ -1,0 +1,133 @@
+name: Bicep_deployment_com
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  buildtest:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        shell: bash
+
+    environment:
+      name: Commercial
+
+    steps:
+    # Checkout code
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+    # Log into Azure
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          environment: AzureUSGovernment
+
+    # Validate Bicep
+      - name: Validate
+        id: validate
+        run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
+
+    # what-if
+      - name: What-if
+        id: whatif
+        run: |
+          PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json -w)
+          PLAN="${PLAN//'%'/'%25'}"
+          PLAN="${PLAN//$'\n'/'%0A'}"
+          PLAN="${PLAN//$'\r'/'%0D'}"
+          echo "::set-output name=plan::$PLAN"
+
+    # saving what-if
+      - name: Save-what-if
+        id: save-what-if
+        uses: actions/github-script@v5
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN_INFRA: "${{ steps.whatif.outputs.plan }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Bicep Validation:  🖌\`${{ steps.validate.outcome }}\`
+            #### Bicep Infrastructure Plan:  📖\`${{ steps.whatif.outcome }}\`
+            
+            <details><summary>Show Plan</summary>
+            
+            \`\`\`\n
+            ${process.env.PLAN_INFRA}
+            \`\`\`
+            
+            </details>
+            
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+              
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+    # build json template
+      - name: Bicep build
+        id: bicep-build
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: az bicep build -f main.bicep --outfile ./main.json
+
+    # commit json template
+      - name: Commit bicep build
+        id: commit-bicep-build
+        uses: stefanzweifel/git-auto-commit-action@v4
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          commit_message: new json template
+          add_options: '-A'
+    
+    # upload json build artifact
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          name: mlz-bicep-build
+          path: ./main.json 
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [buildtest]
+    
+    defaults:
+      run:
+        shell: bash
+
+    environment:
+      name: Commercial
+
+    steps:
+     # Checkout code
+      - name: Checkout
+        uses: actions/checkout@v2
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          ref: ${{ github.head_ref }}
+
+    # Log into Azure
+      - name: Log into Azure
+        uses: azure/login@v1
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          environment: 'AzureCloud'
+
+    # deploy
+      - name: Deploy
+        id: deploy
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
