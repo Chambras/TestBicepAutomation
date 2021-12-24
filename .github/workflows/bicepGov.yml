@@ -34,13 +34,13 @@ jobs:
     # Validate Bicep
       - name: Validate
         id: validate
-        run: az deployment sub validate -n TestBicep -l usgovvirginia -f main.bicep -p @main.parameters.json
+        run: az deployment sub validate -n TestBicep -l usgovvirginia -f main.bicep -p @main.parametersGov.json
 
     # what-if
       - name: What-if
         id: whatif
         run: |
-          PLAN=$(az deployment sub create -n TestBicep -l usgovvirginia -f main.bicep -p @main.parameters.json -w)
+          PLAN=$(az deployment sub create -n TestBicep -l usgovvirginia -f main.bicep -p @main.parametersGov.json -w)
           PLAN="${PLAN//'%'/'%25'}"
           PLAN="${PLAN//$'\n'/'%0A'}"
           PLAN="${PLAN//$'\r'/'%0D'}"
@@ -130,4 +130,4 @@ jobs:
       - name: Deploy
         id: deploy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az deployment sub create -n TestBicep -l usgovvirginia -f main.bicep -p @main.parameters.json
+        run: az deployment sub create -n TestBicep -l usgovvirginia -f main.bicep -p @main.parametersGov.json
