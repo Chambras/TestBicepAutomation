@@ -1,4 +1,4 @@
-name: Bicep_deployment
+name: Bicep_deployment_com
 
 on:
   push:
@@ -29,18 +29,18 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          environment: 'AzureCloud'
+          environment: AzureCloud
 
     # Validate Bicep
       - name: Validate
         id: validate
-        run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
+        run: az deployment sub validate -n TestBicep -l eastus2 -f main.bicep -p @main.parametersCom.json
 
     # what-if
       - name: What-if
         id: whatif
         run: |
-          PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json -w)
+          PLAN=$(az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parametersCom.json -w)
           PLAN="${PLAN//'%'/'%25'}"
           PLAN="${PLAN//$'\n'/'%0A'}"
           PLAN="${PLAN//$'\r'/'%0D'}"
@@ -59,7 +59,7 @@ jobs:
             const output = `#### Bicep Validation:  🖌\`${{ steps.validate.outcome }}\`
             #### Bicep Infrastructure Plan:  📖\`${{ steps.whatif.outcome }}\`
             
-            <details><summary>Show Plan</summary>
+            <details><summary>Show Plan Commercial</summary>
             
             \`\`\`\n
             ${process.env.PLAN_INFRA}
@@ -80,7 +80,7 @@ jobs:
       - name: Bicep build
         id: bicep-build
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az bicep build -f main.bicep --outfile ./main.json
+        run: az bicep build -f main.bicep --outfile ./mainCom.json
 
     # commit json template
       - name: Commit bicep build
@@ -96,8 +96,8 @@ jobs:
         uses: actions/upload-artifact@v2
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
-          name: mlz-bicep-build
-          path: ./main.json 
+          name: mlz-bicep-build-com
+          path: ./mainCom.json 
 
   deploy:
     runs-on: ubuntu-latest
@@ -130,4 +130,4 @@ jobs:
       - name: Deploy
         id: deploy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parameters.json
+        run: az deployment sub create -n TestBicep -l eastus2 -f main.bicep -p @main.parametersCom.json
