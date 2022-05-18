@@ -16,7 +16,8 @@
           "Environment": "Development",
           "Project": "Bicep",
           "BillingCode": "Internal",
-          "Customer": "Demo"
+          "Customer": "Demo",
+          "Version": 1
         }
       }
     }
