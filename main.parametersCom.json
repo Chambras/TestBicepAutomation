@@ -2,17 +2,22 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "name": {
-        "value": "mzv"
-      },
       "location": {
         "value": "eastus2"
       },
+      "suffix": {
+        "value": "Demo"
+      },
+      "name": {
+        "value": "BicepRG"
+      },
       "tags": {
         "value": {
-          "env": "dev",
-          "owner": "marcelo",
-          "project": "mlz"
+          "Environment": "Development",
+          "Project": "Bicep",
+          "BillingCode": "Internal",
+          "Customer": "Demo",
+          "Version": 1
         }
       }
     }

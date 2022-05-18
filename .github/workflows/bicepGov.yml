@@ -90,6 +90,7 @@ jobs:
         with:
           commit_message: new json template
           add_options: '-A'
+          file_pattern: mainGov.json
     
     # upload json build artifact
       - name: Upload a Build Artifact
