@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "1965538278348644395"
+      "templateHash": "11295615601787999363"
     }
   },
   "parameters": {
@@ -47,15 +47,24 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}{1}', parameters('suffix'), parameters('name')))]"
+      "value": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}{1}', parameters('suffix'), parameters('name')))]",
+      "metadata": {
+        "description": "Resource Group ID."
+      }
     },
     "name": {
       "type": "string",
-      "value": "[format('{0}{1}', parameters('suffix'), parameters('name'))]"
+      "value": "[format('{0}{1}', parameters('suffix'), parameters('name'))]",
+      "metadata": {
+        "description": "Resource Group Name."
+      }
     },
     "location": {
       "type": "string",
-      "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}{1}', parameters('suffix'), parameters('name'))), '2021-04-01', 'full').location]"
+      "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}{1}', parameters('suffix'), parameters('name'))), '2021-04-01', 'full').location]",
+      "metadata": {
+        "description": "Resource Group Location."
+      }
     }
   }
 }
