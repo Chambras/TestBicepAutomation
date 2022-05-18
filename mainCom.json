@@ -4,30 +4,42 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.4.1124.51302",
-      "templateHash": "4370664861039221545"
+      "version": "0.6.18.56646",
+      "templateHash": "1965538278348644395"
     }
   },
   "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location where the resoruces are going to be created."
+      }
+    },
+    "suffix": {
+      "type": "string",
+      "metadata": {
+        "description": "To be added at the beginning of each resource."
+      }
+    },
     "name": {
       "type": "string",
       "metadata": {
         "description": "Resource Group name."
       }
     },
-    "location": {
-      "type": "string"
-    },
     "tags": {
       "type": "object",
-      "defaultValue": {}
+      "defaultValue": {},
+      "metadata": {
+        "description": "tags to be applied to the resource."
+      }
     }
   },
   "resources": [
     {
       "type": "Microsoft.Resources/resourceGroups",
-      "apiVersion": "2019-05-01",
-      "name": "[parameters('name')]",
+      "apiVersion": "2021-04-01",
+      "name": "[format('{0}{1}', parameters('suffix'), parameters('name'))]",
       "location": "[parameters('location')]",
       "tags": "[parameters('tags')]"
     }
@@ -35,15 +47,15 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name'))]"
+      "value": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}{1}', parameters('suffix'), parameters('name')))]"
     },
     "name": {
       "type": "string",
-      "value": "[parameters('name')]"
+      "value": "[format('{0}{1}', parameters('suffix'), parameters('name'))]"
     },
     "location": {
       "type": "string",
-      "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), '2019-05-01', 'full').location]"
+      "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', format('{0}{1}', parameters('suffix'), parameters('name'))), '2021-04-01', 'full').location]"
     }
   }
 }
