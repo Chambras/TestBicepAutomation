@@ -19,6 +19,11 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: tags
 }
 
+@description('Resource Group ID.')
 output id string = resourceGroup.id
+
+@description('Resource Group Name.')
 output name string = resourceGroup.name
+
+@description('Resource Group Location.')
 output location string = resourceGroup.location
